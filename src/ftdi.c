@@ -611,8 +611,9 @@ int ftdi_usb_open_dev(struct ftdi_context *ftdi, libusb_device *dev)
     // Likely scenario is a static ftdi_sio kernel module.
     if (ftdi->module_detach_mode == AUTO_DETACH_SIO_MODULE)
     {
-        if (libusb_detach_kernel_driver(ftdi->usb_dev, ftdi->interface) !=0)
-            detach_errno = errno;
+        if (libusb_set_auto_detach_kernel_driver(ftdi->usb_dev, 1) != LIBUSB_SUCCESS)   
+            if (libusb_detach_kernel_driver(ftdi->usb_dev, ftdi->interface) !=0)
+                detach_errno = errno;
     }
 
     if (libusb_get_configuration (ftdi->usb_dev, &cfg) < 0)
